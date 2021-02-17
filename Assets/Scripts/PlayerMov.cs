@@ -151,6 +151,13 @@ public class PlayerMov : MonoBehaviour
         {
             nextpos = Vector3.zero;
         }
+        if(myRb.position.z > (lastZ + 0.25f))
+        {
+            myRb.position = new Vector3(myRb.position.x, myRb.position.y, lastZ);
+        }else if(myRb.position.z < (lastZ - 3f - 0.25f))
+        {
+            myRb.position = new Vector3(myRb.position.x, myRb.position.y, lastZ-3f);
+        }
         //myRb.MovePosition(transform.position + transform.right * Time.fixedDeltaTime);
     }
 
