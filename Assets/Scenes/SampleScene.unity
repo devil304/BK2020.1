@@ -17371,7 +17371,7 @@ GameObject:
   - component: {fileID: 1212799698}
   - component: {fileID: 1212799702}
   - component: {fileID: 1212799703}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Player
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -17468,9 +17468,9 @@ Rigidbody:
   m_AngularDrag: 0
   m_UseGravity: 1
   m_IsKinematic: 0
-  m_Interpolate: 0
-  m_Constraints: 112
-  m_CollisionDetection: 0
+  m_Interpolate: 1
+  m_Constraints: 120
+  m_CollisionDetection: 1
 --- !u!114 &1212799703
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -17488,7 +17488,9 @@ MonoBehaviour:
   JMax: 6
   JATime: 0.25
   grav: 0.03
+  speed: 7.5
   Dx: 0.5
+  GroundDetectionY: 0.25
 --- !u!1 &1217935327
 GameObject:
   m_ObjectHideFlags: 0
