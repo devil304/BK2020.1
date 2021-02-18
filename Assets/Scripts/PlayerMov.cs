@@ -8,8 +8,9 @@ public class PlayerMov : MonoBehaviour
 {
     Rigidbody myRb;
     BoxCollider myBC;
+    [SerializeField] Animator myAnim;
     Main mainI;
-    float move;
+    int move=0;
     [SerializeField] float MSpeed = 5f, AMSpeed = 1f, JMax = 4f, JATime = 0.5f, grav = 11f, speed=1;
     [SerializeField] float Dx=0.5f, GroundDetectionY = 0.5f;
     float lastZ = 0;
@@ -89,7 +90,7 @@ public class PlayerMov : MonoBehaviour
     }
 
     float time = 0, time2 = 0;
-
+    int lastmove;
     private void FixedUpdate()
     {
         //Debug.Log(grounded());
@@ -137,12 +138,20 @@ public class PlayerMov : MonoBehaviour
         if (nextpos!=Vector3.zero && !freepass(nextpos.z<transform.position.z?-1.5f:1.5f)) {
             if (Math.Abs((transform.position - nextpos).z) > 0.001f)
             {
+                if (myAnim.GetInteger("LayerChange") == 0)
+                {
+                    myAnim.SetInteger("LayerChange",nextpos.z>transform.position.z?-1:1);
+                }
                 myRb.constraints = RigidbodyConstraints.None | RigidbodyConstraints.FreezeRotation;
                 float step = speed * Time.fixedDeltaTime;
                 myRb.MovePosition(Vector3.MoveTowards(transform.position, new Vector3(transform.position.x,transform.position.y,nextpos.z), step));
             }
             else
             {
+                if (myAnim.GetInteger("LayerChange") != 0)
+                {
+                    myAnim.SetInteger("LayerChange", 0);
+                }
                 nextpos = Vector3.zero;
                 myRb.MovePosition(myRb.position);
                 myRb.constraints = RigidbodyConstraints.None | RigidbodyConstraints.FreezeRotation | RigidbodyConstraints.FreezePositionZ;
@@ -163,6 +172,23 @@ public class PlayerMov : MonoBehaviour
 
     private void LRp(InputAction.CallbackContext obj)
     {
-        move = obj.ReadValue<float>();
+        if(move!=0)
+            lastmove = move;
+        float tmp = obj.ReadValue<float>();
+        move = tmp>0?1:tmp<0?-1:0;
+        if(move!=0&&(lastmove>0?1:lastmove<0?-1:0)!=(move > 0 ? 1 : move < 0 ? -1 : 0))
+        {
+            myAnim.SetInteger("Turn",lastmove<move?1:-1);
+        }
+        if (move!=0)
+        {
+            //Debug.Log("Tak");
+            myAnim.SetBool("Go", true);
+        }
+        else
+        {
+            //Debug.Log("Nie");
+            myAnim.SetBool("Go", false);
+        }
     }
 }
