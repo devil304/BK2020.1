@@ -28,6 +28,14 @@
                     "expectedControlType": "Axis",
                     "processors": "",
                     "interactions": ""
+                },
+                {
+                    "name": "Use",
+                    "type": "Button",
+                    "id": "c2527648-a900-47cf-8933-18ee0e01fe98",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
                 }
             ],
             "bindings": [
@@ -294,6 +302,39 @@
                     "action": "BF",
                     "isComposite": false,
                     "isPartOfComposite": true
+                },
+                {
+                    "name": "",
+                    "id": "941893a9-55c4-4bd2-9914-4d6d46b0e47c",
+                    "path": "<Keyboard>/k",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Use",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "0737c0c5-948a-463a-a4bd-32a351ed6d8b",
+                    "path": "<Keyboard>/enter",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Use",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "0e8ace8f-548a-4eaf-a8b8-8d7777049ad3",
+                    "path": "<Keyboard>/shift",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Use",
+                    "isComposite": false,
+                    "isPartOfComposite": false
                 }
             ]
         }

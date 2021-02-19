@@ -41,6 +41,14 @@ public class @Main : IInputActionCollection, IDisposable
                     ""expectedControlType"": ""Axis"",
                     ""processors"": """",
                     ""interactions"": """"
+                },
+                {
+                    ""name"": ""Use"",
+                    ""type"": ""Button"",
+                    ""id"": ""c2527648-a900-47cf-8933-18ee0e01fe98"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
                 }
             ],
             ""bindings"": [
@@ -307,6 +315,39 @@ public class @Main : IInputActionCollection, IDisposable
                     ""action"": ""BF"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""941893a9-55c4-4bd2-9914-4d6d46b0e47c"",
+                    ""path"": ""<Keyboard>/k"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Use"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""0737c0c5-948a-463a-a4bd-32a351ed6d8b"",
+                    ""path"": ""<Keyboard>/enter"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Use"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""0e8ace8f-548a-4eaf-a8b8-8d7777049ad3"",
+                    ""path"": ""<Keyboard>/shift"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Use"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -318,6 +359,7 @@ public class @Main : IInputActionCollection, IDisposable
         m_mov_LR = m_mov.FindAction("LR", throwIfNotFound: true);
         m_mov_Jump = m_mov.FindAction("Jump", throwIfNotFound: true);
         m_mov_BF = m_mov.FindAction("BF", throwIfNotFound: true);
+        m_mov_Use = m_mov.FindAction("Use", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -370,6 +412,7 @@ public class @Main : IInputActionCollection, IDisposable
     private readonly InputAction m_mov_LR;
     private readonly InputAction m_mov_Jump;
     private readonly InputAction m_mov_BF;
+    private readonly InputAction m_mov_Use;
     public struct MovActions
     {
         private @Main m_Wrapper;
@@ -377,6 +420,7 @@ public class @Main : IInputActionCollection, IDisposable
         public InputAction @LR => m_Wrapper.m_mov_LR;
         public InputAction @Jump => m_Wrapper.m_mov_Jump;
         public InputAction @BF => m_Wrapper.m_mov_BF;
+        public InputAction @Use => m_Wrapper.m_mov_Use;
         public InputActionMap Get() { return m_Wrapper.m_mov; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -395,6 +439,9 @@ public class @Main : IInputActionCollection, IDisposable
                 @BF.started -= m_Wrapper.m_MovActionsCallbackInterface.OnBF;
                 @BF.performed -= m_Wrapper.m_MovActionsCallbackInterface.OnBF;
                 @BF.canceled -= m_Wrapper.m_MovActionsCallbackInterface.OnBF;
+                @Use.started -= m_Wrapper.m_MovActionsCallbackInterface.OnUse;
+                @Use.performed -= m_Wrapper.m_MovActionsCallbackInterface.OnUse;
+                @Use.canceled -= m_Wrapper.m_MovActionsCallbackInterface.OnUse;
             }
             m_Wrapper.m_MovActionsCallbackInterface = instance;
             if (instance != null)
@@ -408,6 +455,9 @@ public class @Main : IInputActionCollection, IDisposable
                 @BF.started += instance.OnBF;
                 @BF.performed += instance.OnBF;
                 @BF.canceled += instance.OnBF;
+                @Use.started += instance.OnUse;
+                @Use.performed += instance.OnUse;
+                @Use.canceled += instance.OnUse;
             }
         }
     }
@@ -417,5 +467,6 @@ public class @Main : IInputActionCollection, IDisposable
         void OnLR(InputAction.CallbackContext context);
         void OnJump(InputAction.CallbackContext context);
         void OnBF(InputAction.CallbackContext context);
+        void OnUse(InputAction.CallbackContext context);
     }
 }

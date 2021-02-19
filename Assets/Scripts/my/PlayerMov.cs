@@ -2,10 +2,13 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.InputSystem;
 
 public class PlayerMov : MonoBehaviour
 {
+    public delegate void used();
+    public event used usee;
     Rigidbody myRb;
     BoxCollider myBC;
     [SerializeField] Animator myAnim;
@@ -14,7 +17,7 @@ public class PlayerMov : MonoBehaviour
     [SerializeField] float MSpeed = 5f, AMSpeed = 1f, JMax = 4f, JATime = 0.5f, grav = 11f, speed=1;
     [SerializeField] float Dx=0.5f, GroundDetectionY = 0.5f;
     float lastZ = 0;
-    Vector3 nextpos;
+    Vector3 nextpos, prevpos;
 
     private void Start()
     {
@@ -29,6 +32,13 @@ public class PlayerMov : MonoBehaviour
         mainI.mov.Jump.performed += Jp;
         mainI.mov.Jump.canceled += Jc;
         mainI.mov.BF.performed += BFp;
+        mainI.mov.Use.performed += Usep;
+    }
+
+    private void Usep(InputAction.CallbackContext obj)
+    {
+        myAnim.SetBool("Use",true);
+        usee.Invoke();
     }
 
     private void BFp(InputAction.CallbackContext obj)
@@ -36,14 +46,22 @@ public class PlayerMov : MonoBehaviour
         if (obj.ReadValue<float>() > 0 && nextpos==Vector3.zero)
         {
             nextpos = transform.position + (transform.forward * 1.5f);
-            if (nextpos.z > lastZ +0.5f)
+            prevpos = transform.position;
+            if (nextpos.z > lastZ + 0.5f)
+            {
                 nextpos = Vector3.zero;
+                prevpos = Vector3.zero;
+            }
         }
         else if (nextpos == Vector3.zero)
         {
             nextpos = transform.position - (transform.forward * 1.5f);
-            if (nextpos.z < (lastZ-3) - 0.5f)
+            prevpos = transform.position;
+            if (nextpos.z < (lastZ - 3) - 0.5f)
+            {
                 nextpos = Vector3.zero;
+                prevpos = Vector3.zero;
+            }
         }
     }
 
@@ -90,9 +108,18 @@ public class PlayerMov : MonoBehaviour
     }
 
     float time = 0, time2 = 0;
-    int lastmove;
+    int lastmove, movetmp=0;
     private void FixedUpdate()
     {
+        if (myAnim.GetBool("Use") && move != 0)
+        {
+            movetmp = move;
+            move = 0;
+        }else if (movetmp != 0)
+        {
+            move = movetmp;
+            movetmp = 0;
+        }
         //Debug.Log(grounded());
         //Debug.Log(move);
         if (myRb.velocity.x == 0)
@@ -134,6 +161,12 @@ public class PlayerMov : MonoBehaviour
                 myRb.velocity = new Vector3(0, myRb.velocity.y, myRb.velocity.z);
             }
         }
+        if(!myRb.constraints.HasFlag(RigidbodyConstraints.FreezePositionZ)&& freepass(nextpos.z < transform.position.z ? -1.5f : 1.5f))
+        {
+            Vector3 tmp = nextpos;
+            nextpos = prevpos;
+            prevpos = tmp;
+        }
         //Debug.Log(freepass(-1.5f));
         if (nextpos!=Vector3.zero && !freepass(nextpos.z<transform.position.z?-1.5f:1.5f)) {
             if (Math.Abs((transform.position - nextpos).z) > 0.001f)
@@ -153,12 +186,15 @@ public class PlayerMov : MonoBehaviour
                     myAnim.SetInteger("LayerChange", 0);
                 }
                 nextpos = Vector3.zero;
+                prevpos = Vector3.zero;
+                myRb.position = new Vector3(myRb.position.x, myRb.position.y, nextpos.z);
                 myRb.MovePosition(myRb.position);
                 myRb.constraints = RigidbodyConstraints.None | RigidbodyConstraints.FreezeRotation | RigidbodyConstraints.FreezePositionZ;
             }
         }else if (nextpos != Vector3.zero)
         {
             nextpos = Vector3.zero;
+            prevpos = Vector3.zero;
         }
         if(myRb.position.z > (lastZ + 0.25f))
         {
