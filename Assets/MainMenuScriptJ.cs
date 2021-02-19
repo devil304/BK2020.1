@@ -7,11 +7,24 @@ public class MainMenuScriptJ : MonoBehaviour
 {
     public void PlayGame ()
     {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+        StartCoroutine(LoadYourAsyncScene());
     }
     public void QuitGame ()
     {
-        Debug.Log("QUIT!");
+        //Debug.Log("QUIT!");
         Application.Quit();
     }
+
+    IEnumerator LoadYourAsyncScene()
+    {
+
+        AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(SceneManager.GetActiveScene().buildIndex + 1);
+
+       
+        while (!asyncLoad.isDone)
+        {
+            yield return null;
+        }
+    }
+
 }
