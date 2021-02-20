@@ -12,15 +12,17 @@ public class PlayerMov : MonoBehaviour
     Rigidbody myRb;
     BoxCollider myBC;
     [SerializeField] Animator myAnim;
-    Main mainI;
+    [HideInInspector] public Main mainI;
     int move=0;
     [SerializeField] float MSpeed = 5f, AMSpeed = 1f, JMax = 4f, JATime = 0.5f, grav = 11f, speed=1;
     [SerializeField] float Dx=0.5f, GroundDetectionY = 0.5f;
-    float lastZ = 0;
+    [HideInInspector] public float lastZ = 0;
     Vector3 nextpos, prevpos;
-
+    public Vector3 checkPointPos;
+    [SerializeField] MainMenuScriptJ menu;
     private void Start()
     {
+        checkPointPos = transform.position;
         lastZ = transform.position.z;
         //nextpos = transform.position - (transform.forward * 1.5f);
         myBC = GetComponent<BoxCollider>();
@@ -33,6 +35,30 @@ public class PlayerMov : MonoBehaviour
         mainI.mov.Jump.canceled += Jc;
         mainI.mov.BF.performed += BFp;
         mainI.mov.Use.performed += Usep;
+        mainI.mov.Menu.performed += menup;
+    }
+
+    private void menup(InputAction.CallbackContext obj)
+    {
+        menu.c.enabled = true;
+        menu.MMaGM[0].volume = 0;
+        menu.actVol = menu.MMaGM[1].volume;
+        menu.MMaGM[0].Play();
+        StartCoroutine(menu.changeMB());
+        mainI.mov.Disable();
+        Time.timeScale = 0f;
+        enabled = false;
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.tag == "Dead")
+            transform.position = checkPointPos;
+    }
+
+    public void CP(Vector3 pos)
+    {
+        checkPointPos = pos;
     }
 
     private void Usep(InputAction.CallbackContext obj)
