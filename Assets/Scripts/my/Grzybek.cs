@@ -6,9 +6,9 @@ public class Grzybek : MonoBehaviour
 {    
     PlayerMov player;
     GrzybUI Gui;
-    [SerializeField] float MinDist;
+    [SerializeField] float MinDist=2;
 
-    private void Start()
+    private void OnEnable()
     {
         Gui = FindObjectOfType<GrzybUI>();
         player = FindObjectOfType<PlayerMov>();
@@ -23,7 +23,7 @@ public class Grzybek : MonoBehaviour
         }
     }
 
-    private void OnDestroy()
+    private void OnDisable()
     {
         player.usee -= check;
     }

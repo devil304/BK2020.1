@@ -7,6 +7,7 @@ public class GrzybUI : MonoBehaviour
 {
     [SerializeField] int max = 0, act = 0;
     TextMeshProUGUI counter;
+    [SerializeField] Quest MyQ;
     // Start is called before the first frame update
     void Start()
     {
@@ -19,7 +20,7 @@ public class GrzybUI : MonoBehaviour
         act+=act<max?1:0;
         if (act == max)
         {
-
+            MyQ.Done();
         }
         counter.text = act + "/" + max;
     }

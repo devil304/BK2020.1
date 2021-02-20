@@ -20,6 +20,7 @@ public class PlayerMov : MonoBehaviour
     Vector3 nextpos, prevpos;
     public Vector3 checkPointPos;
     [SerializeField] MainMenuScriptJ menu;
+    [HideInInspector] public bool quest = false;
     private void Start()
     {
         checkPointPos = transform.position;
